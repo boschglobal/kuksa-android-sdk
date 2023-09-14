@@ -1,7 +1,6 @@
+import extension.lib
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
-import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.withType
 
 val baselineFile = project.file("$rootDir/config/detekt/baseline.xml")
 
