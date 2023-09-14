@@ -39,10 +39,15 @@ android {
 }
 
 dependencies {
-    val kuksaSdkVersion = rootProject.extra["version"]
-    implementation("org.eclipse.kuksa:kuksa-sdk:$kuksaSdkVersion") {
-        isChanging = true
-    }
+    implementation(project(":kuksa-sdk")) { isTransitive = false }
+
+    // transitive lib dependencies
+    implementation(libs.grpc.protobuf)
+
+    implementation(libs.grpc.okhttp)
+    implementation(libs.grpc.stub)
+    implementation(libs.tomcat.annotations)
+    implementation(libs.kotlinx.coroutines.android)
 
     // app dependencies
     implementation(libs.androidx.appcompat)
