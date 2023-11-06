@@ -64,8 +64,8 @@ class VSSPropertiesViewModel : ViewModel() {
 
 @Immutable
 data class VSSProperties(
-    val vssPath: String = "Vehicle.Speed",
+    val vssPath: String = "Vehicle.Trailer.Refrigeration.IsEnabled",
     val valueType: ValueCase = ValueCase.VALUE_NOT_SET,
-    val value: String = "130",
+    val value: String = "true",
     val fieldType: Field = Field.FIELD_VALUE,
 )
