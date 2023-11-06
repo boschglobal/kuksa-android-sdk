@@ -82,18 +82,23 @@ class VssDefinitionProcessor(
             )
 
             val vssDefinition = classDeclaration.getAnnotationsByType(VssDefinition::class).first()
-            val vssDefinitionPath = vssDefinition.vssDefinitionPath
+            val vssDefinitionPaths = vssDefinition.vssDefinitionPaths
 
-            val definitionFile = loadAssetFile(vssDefinitionPath)
-            if (!definitionFile.exists()) {
-                logger.error("No VSS definition file was found!")
-                return
+            vssDefinitionPaths.forEach { vssDefinitionPath ->
+                val definitionFile = loadAssetFile(vssDefinitionPath)
+                if (!definitionFile.exists()) {
+                    logger.error("No VSS definition file was found!")
+                    return
+                }
+
+                val simpleSpecificationElements = yamlParser.parseSpecifications(definitionFile)
+                val vssPathToSpecificationElement = simpleSpecificationElements.associateBy(
+                    { VssPath(it.vssPath) },
+                    { it },
+                )
+
+                generateModelFiles(vssPathToSpecificationElement)
             }
-
-            val simpleSpecificationElements = yamlParser.parseSpecifications(definitionFile)
-            val vssPathToSpecificationElement = simpleSpecificationElements.associateBy({ VssPath(it.vssPath) }, { it })
-
-            generateModelFiles(vssPathToSpecificationElement)
         }
 
         // Uses the default file path for generated files (from the code generator) and searches for the given file.

@@ -37,9 +37,9 @@ package org.eclipse.kuksa.vsscore.annotation
  * ```
  * <ksp.incremental=false>
  *
- * @param vssDefinitionPath the path to the definition file
+ * @param vssDefinitionPaths the paths to the definition file
  * ```
  */
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.SOURCE)
-annotation class VssDefinition(val vssDefinitionPath: String)
+annotation class VssDefinition(vararg val vssDefinitionPaths: String)
