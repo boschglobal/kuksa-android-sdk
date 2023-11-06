@@ -8641,11 +8641,13 @@
               "IsEnabled": {
                 "datatype": "boolean",
                 "description": "Is Refrigeration active?",
-                "type": "actuator"
+                "type": "actuator",
+                "uuid": "23f54803b6f8461c9ee66c843c60938c"
               }
             },
             "description": "Control and monitor trailer refrigeration system",
-            "type": "branch"
+            "type": "branch",
+            "uuid": "cef475e86b144ab09d7cb7dbefb78450"
           }
         },
         "description": "Trailer signals.",
