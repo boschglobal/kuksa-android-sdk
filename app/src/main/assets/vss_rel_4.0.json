@@ -7470,6 +7470,17 @@
             "datatype": "boolean",
             "description": "Signal indicating if trailer is connected or not.",
             "type": "sensor"
+          },
+          "Refrigeration": {
+            "children": {
+              "IsEnabled": {
+                "datatype": "boolean",
+                "description": "Is Refrigeration active?",
+                "type": "actuator"
+              }
+            },
+            "description": "Control and monitor trailer refrigeration system",
+            "type": "branch"
           }
         },
         "description": "Trailer signals.",
