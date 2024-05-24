@@ -33,6 +33,8 @@ import org.eclipse.kuksa.connectivity.databroker.subscription.DataBrokerSubscrip
 import org.eclipse.kuksa.extension.TAG
 import org.eclipse.kuksa.extension.applyDatapoint
 import org.eclipse.kuksa.proto.v1.KuksaValV1
+import org.eclipse.kuksa.proto.v1.KuksaValV1.EntryUpdate
+import org.eclipse.kuksa.proto.v1.KuksaValV1.StreamedUpdateResponse
 import org.eclipse.kuksa.proto.v1.KuksaValV1.SubscribeResponse
 import org.eclipse.kuksa.proto.v1.Types
 import org.eclipse.kuksa.proto.v1.Types.Field
@@ -112,7 +114,7 @@ internal class DataBrokerTransporter(
                     .applyDatapoint(updatedDatapoint, field)
                     .build()
 
-                KuksaValV1.EntryUpdate.newBuilder()
+                EntryUpdate.newBuilder()
                     .setEntry(dataEntry)
                     .addFields(field)
                     .build()
@@ -130,6 +132,12 @@ internal class DataBrokerTransporter(
                 throw DataBrokerException(e.message, e)
             }
         }
+    }
+
+    fun streamingUpdate(
+        streamObserver: StreamObserver<StreamedUpdateResponse>,
+    ): StreamObserver<KuksaValV1.StreamedUpdateRequest> {
+        return VALGrpc.newStub(managedChannel).streamedUpdate(streamObserver)
     }
 
     /**

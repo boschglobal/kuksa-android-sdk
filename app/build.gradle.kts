@@ -151,6 +151,9 @@ dependencies {
     implementation(libs.androidx.activity.ktx)
 
     testImplementation(libs.kotest)
+    api(libs.grpc.protobuf)
+    implementation(libs.grpc.okhttp)
+    implementation(libs.grpc.stub)
 
     // Compose
     val composeBom = platform(libs.androidx.compose.bom)

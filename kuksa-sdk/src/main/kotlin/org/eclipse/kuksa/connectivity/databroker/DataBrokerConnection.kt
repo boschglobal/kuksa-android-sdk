@@ -21,6 +21,7 @@ package org.eclipse.kuksa.connectivity.databroker
 import android.util.Log
 import io.grpc.ConnectivityState
 import io.grpc.ManagedChannel
+import io.grpc.stub.StreamObserver
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -40,6 +41,7 @@ import org.eclipse.kuksa.extension.TAG
 import org.eclipse.kuksa.extension.datapoint
 import org.eclipse.kuksa.extension.vss.copy
 import org.eclipse.kuksa.pattern.listener.MultiListener
+import org.eclipse.kuksa.proto.v1.KuksaValV1
 import org.eclipse.kuksa.proto.v1.KuksaValV1.GetResponse
 import org.eclipse.kuksa.proto.v1.KuksaValV1.SetResponse
 import org.eclipse.kuksa.proto.v1.Types
@@ -212,6 +214,12 @@ class DataBrokerConnection internal constructor(
     suspend fun update(request: UpdateRequest): SetResponse {
         Log.d(TAG, "Update with request: $request")
         return dataBrokerTransporter.update(request.vssPath, request.dataPoint, request.fields.toSet())
+    }
+
+    fun streamingUpdate(
+        streamObserver: StreamObserver<KuksaValV1.StreamedUpdateResponse>,
+    ): StreamObserver<KuksaValV1.StreamedUpdateRequest> {
+        return dataBrokerTransporter.streamingUpdate(streamObserver)
     }
 
     /**

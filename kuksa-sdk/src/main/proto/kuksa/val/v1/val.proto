@@ -25,9 +25,9 @@ import "kuksa/val/v1/types.proto";
 // Tokens (auth-token or auth-uuid) are sent as (GRPC / http2) metadata.
 //
 // The auth-token is a JWT compliant token as the examples found here:
-// https://github.com/eclipse/kuksa.val/tree/master/kuksa_certificates/jwt
+// https://github.com/eclipse-kuksa/kuksa-databroker/tree/main/certificates/jwt
 //
-// See also https://github.com/eclipse/kuksa.val/blob/master/doc/jwt.md
+// See also https://github.com/eclipse-kuksa/kuksa-databroker/blob/main/doc/authorization.md#jwt-access-token
 //
 // Upon reception of auth-token, server shall generate an auth-uuid in metadata
 // that the client can use instead of auth-token in subsequent calls.
@@ -38,6 +38,8 @@ service VAL {
 
   // Set entries
   rpc Set(SetRequest) returns (SetResponse);
+
+  rpc StreamedUpdate(stream StreamedUpdateRequest) returns (stream StreamedUpdateResponse);
 
   // Subscribe to a set of entries
   //
@@ -86,6 +88,15 @@ message SetRequest {
 // Global errors are specified in `error`.
 // Errors for individual entries are specified in `errors`.
 message SetResponse {
+  Error error                    = 1;
+  repeated DataEntryError errors = 2;
+}
+
+message StreamedUpdateRequest {
+  repeated EntryUpdate updates = 1;
+}
+
+message StreamedUpdateResponse {
   Error error                    = 1;
   repeated DataEntryError errors = 2;
 }

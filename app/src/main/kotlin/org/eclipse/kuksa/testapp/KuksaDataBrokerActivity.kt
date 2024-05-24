@@ -29,6 +29,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
+import io.grpc.stub.StreamObserver
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.eclipse.kuksa.connectivity.databroker.DataBrokerConnection
 import org.eclipse.kuksa.connectivity.databroker.listener.DisconnectListener
 import org.eclipse.kuksa.connectivity.databroker.listener.VssNodeListener
@@ -46,7 +51,10 @@ import org.eclipse.kuksa.extension.firstValue
 import org.eclipse.kuksa.extension.stringValue
 import org.eclipse.kuksa.extension.valueType
 import org.eclipse.kuksa.proto.v1.KuksaValV1
+import org.eclipse.kuksa.proto.v1.KuksaValV1.EntryUpdate
 import org.eclipse.kuksa.proto.v1.KuksaValV1.GetResponse
+import org.eclipse.kuksa.proto.v1.KuksaValV1.StreamedUpdateRequest
+import org.eclipse.kuksa.proto.v1.Types.DataEntry
 import org.eclipse.kuksa.proto.v1.Types.Datapoint
 import org.eclipse.kuksa.proto.v1.Types.Field
 import org.eclipse.kuksa.testapp.databroker.DataBrokerEngine
@@ -68,6 +76,7 @@ import org.eclipse.kuksa.testapp.ui.theme.KuksaAppAndroidTheme
 import org.eclipse.kuksa.vss.VssVehicle
 import org.eclipse.kuksa.vsscore.annotation.VssModelGenerator
 import org.eclipse.kuksa.vsscore.model.VssNode
+import kotlin.random.Random
 
 @VssModelGenerator
 class KuksaDataBrokerActivity : ComponentActivity() {
@@ -87,6 +96,46 @@ class KuksaDataBrokerActivity : ComponentActivity() {
             connectionViewModel.updateConnectionState(ConnectionViewState.CONNECTED)
 
             loadVssPathSuggestions()
+
+            val streamObserver = object : StreamObserver<KuksaValV1.StreamedUpdateResponse> {
+                override fun onNext(value: KuksaValV1.StreamedUpdateResponse?) {
+                    Log.d(TAG, "onNext() called with: value = $value")
+                }
+
+                override fun onError(error: Throwable?) {
+                    Log.d(TAG, "onError() called with: error = $error")
+                }
+
+                override fun onCompleted() {
+                    Log.d(TAG, "onCompleted() called")
+                }
+            }
+
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO) {
+                    val streamingUpdate = result?.streamingUpdate(streamObserver)
+                    val random = Random(System.currentTimeMillis())
+                    repeat(5000) {
+                        val datapoint = Datapoint.newBuilder()
+                            .setFloat(random.nextFloat())
+                            .build()
+
+                        val dataEntry = DataEntry.newBuilder()
+                            .setPath("Vehicle.Speed")
+                            .setValue(datapoint)
+
+                        val entryUpdate = EntryUpdate.newBuilder()
+                            .addFields(Field.FIELD_VALUE)
+                            .setEntry(dataEntry)
+
+                        val streamedUpdateRequest = StreamedUpdateRequest.newBuilder()
+                            .addUpdates(entryUpdate)
+                            .build()
+                        streamingUpdate?.onNext(streamedUpdateRequest)
+                        delay(1000)
+                    }
+                }
+            }
         }
 
         override fun onError(error: Throwable) {
@@ -102,7 +151,7 @@ class KuksaDataBrokerActivity : ComponentActivity() {
     }
 
     private val vssPathListener = object : VssPathListener {
-        override fun onEntryChanged(entryUpdates: List<KuksaValV1.EntryUpdate>) {
+        override fun onEntryChanged(entryUpdates: List<EntryUpdate>) {
             Log.d(TAG, "onEntryChanged() called with: updatedValues = $entryUpdates")
 
             val entries = mutableListOf<String>().apply {
