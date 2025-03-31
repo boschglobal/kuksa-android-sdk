@@ -17,11 +17,10 @@
  *
  */
 
-package org.eclipse.kuksa.connectivity.databroker
+package org.eclipse.kuksa.extensions
 
-import java.util.concurrent.TimeUnit
+import org.eclipse.kuksa.proto.v2.Types.SignalID
 
-const val DATABROKER_HOST = "127.0.0.1"
-
-const val DATABROKER_TIMEOUT_SECONDS = 30L
-val DATABROKER_TIMEOUT_UNIT = TimeUnit.SECONDS
+fun String.toSignalId(): SignalID {
+    return SignalID.newBuilder().setPath(this).build()
+}

@@ -24,12 +24,11 @@ import com.github.dockerjava.api.model.AccessMode
 import com.github.dockerjava.api.model.Bind
 import com.github.dockerjava.api.model.HostConfig
 import com.github.dockerjava.api.model.Volume
-import org.eclipse.kuksa.connectivity.databroker.DATABROKER_CONTAINER_NAME
 import org.eclipse.kuksa.test.TestResourceFile
 
 // tls enabled, authentication enabled
 class SecureDataBrokerDockerContainer(
-    containerName: String = DATABROKER_CONTAINER_NAME,
+    containerName: String = "databroker_test_secure",
 ) : DataBrokerDockerContainer(containerName) {
 
     private val authenticationFolder = TestResourceFile("authentication").toString()
