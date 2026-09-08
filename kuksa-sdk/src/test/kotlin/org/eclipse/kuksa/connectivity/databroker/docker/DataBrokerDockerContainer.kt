@@ -95,7 +95,7 @@ abstract class DataBrokerDockerContainer(
 
     private val resolvedVssFile: File = resolveVssFile(vssFilePath)
     private val vssFileName: String = resolvedVssFile.name
-    protected val vssDirectory: String = resolvedVssFile.parent
+    protected val vssDirectory: String = checkNotNull(resolvedVssFile.parent)
     protected val vssMountDirectory: String = "/vss"
     protected val vssMount: String = "$vssMountDirectory/$vssFileName"
 
