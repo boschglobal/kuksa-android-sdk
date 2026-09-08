@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 - 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023 - 2026 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import org.eclipse.kuksa.test.TestResourceFile
 import java.io.IOException
 import java.io.InputStream
 
-private const val DEFAULT_DATABROKER_TIMEOUT = "10"
+private const val DEFAULT_DATABROKER_TIMEOUT = "5"
 
 class DataBrokerConnectorProvider {
     lateinit var managedChannel: ManagedChannel

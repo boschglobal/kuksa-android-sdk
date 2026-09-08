@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 - 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023 - 2026 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@ class SecureDataBrokerDockerContainer(
 
     override val hostConfig: HostConfig = super.hostConfig
         .withBinds(
+            Bind(vssDirectory, Volume(vssMountDirectory), AccessMode.ro),
             Bind(tlsFolder, Volume(tlsMount), AccessMode.ro),
             Bind(authenticationFolder, Volume(authenticationMount), AccessMode.ro),
         )
@@ -53,6 +54,7 @@ class SecureDataBrokerDockerContainer(
                 "--tls-cert", "$tlsMount/Server.pem",
                 "--tls-private-key", "$tlsMount/Server.key",
                 "--jwt-public-key", "$authenticationMount/jwt.key.pub",
+                "--vss", vssMount,
             )
             .exec()
     }

@@ -17,34 +17,22 @@
  *
  */
 
-pluginManagement {
-    repositories {
-        mavenLocal()
-        gradlePluginPortal()
-        google()
-        mavenCentral()
+package org.eclipse.kuksa.connectivity.databroker.docker
+
+import io.kotest.core.spec.style.BehaviorSpec
+import io.kotest.matchers.ints.shouldBeGreaterThan
+import io.kotest.matchers.shouldBe
+
+class PortAllocationSafetyTest : BehaviorSpec({
+    given("Port allocation mechanism") {
+        `when`("Allocating multiple ephemeral ports") {
+            then("It returns valid available port numbers") {
+                val ports = (1..10).map {
+                    DataBrokerDockerContainer.findAvailablePort()
+                }
+                ports.size shouldBeGreaterThan 0
+                ports.all { it > 1024 } shouldBe true
+            }
+        }
     }
-
-    // Version catalog can't be used here
-    plugins {
-        id("com.google.devtools.ksp") version "2.3.11"
-        id("org.eclipse.velocitas.vss-processor-plugin") version "0.1.3"
-        kotlin("jvm")
-        kotlin("plugin.serialization") version "2.4.10"
-    }
-}
-
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        mavenLocal()
-        google()
-        mavenCentral()
-    }
-}
-
-rootProject.name = "kuksa-android-sdk"
-
-include(":app")
-include(":kuksa-sdk")
-include(":samples")
+})
