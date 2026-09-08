@@ -82,6 +82,10 @@ vssProcessor {
     searchPath = "$rootDir/vss"
 }
 
+tasks.withType<Test>().configureEach {
+    failOnNoDiscoveredTests = false
+}
+
 dependencies {
     implementation(project(":kuksa-sdk"))
 
