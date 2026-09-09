@@ -125,9 +125,10 @@ private fun TopBar(
     connectionViewModel: ConnectionViewModel,
 ) {
     TopAppBar(
-        title = { Text("TestApp") },
+        title = { Text("Kuksa TestApp", color = MaterialTheme.colorScheme.onPrimary) },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            containerColor = MaterialTheme.colorScheme.primary,
+            actionIconContentColor = MaterialTheme.colorScheme.onPrimary,
         ),
         actions = {
             ConnectionStatusIcon(connectionViewModel)
@@ -227,7 +228,7 @@ fun DataBrokerOutput(viewModel: OutputViewModel, modifier: Modifier = Modifier) 
     ) {
         Column(modifier = Modifier.verticalScroll(scrollState)) {
             val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss:SSS")
-            Headline(name = "Output", color = Color.White)
+            Headline(name = "Output", color = MaterialTheme.colorScheme.onPrimary)
             outputEntries.forEach { outputEntry ->
                 val date = outputEntry.localDateTime.format(dateFormatter)
                 val newLine = System.lineSeparator()
@@ -264,6 +265,7 @@ private fun OutputText(
         fontSize = 14.sp,
         textAlign = TextAlign.Start,
         onTextLayout = onTextLayout,
+        color = MaterialTheme.colorScheme.onPrimary,
     )
 }
 
